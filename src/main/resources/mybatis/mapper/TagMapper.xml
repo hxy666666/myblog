@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tangyu.myblog.mapper.TagMapper">
+    <resultMap id="MyTag" type="com.tangyu.myblog.pojo.Tag">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <collection property="blogs"
+                    select="com.tangyu.myblog.mapper.BlogMapper.listBlogByTagIdLike"
+                    column="id"></collection>
+    </resultMap>
+    <!--List<Tag> listTagByTagIds(@Param("ids") String ids);-->
+    <select id="listTagByTagIds" resultMap="MyTag">
+        select * from blog.t_tag
+        where #{ids} like CONCAT('%',id,'%')
+    </select>
+    <!--Boolean saveTag(Tag tag);-->
+    <insert id="saveTag" parameterType="tag">
+        insert into blog.t_tag (id,name)
+        values (null,#{name})
+    </insert>
+    <!--Tag getTagById(@Param("id") Long id);-->
+    <select id="getTagById" resultMap="MyTag">
+        select * from blog.t_tag
+        where id=#{id}
+    </select>
+    <!--List<Tag> listTag();-->
+    <select id="listTag" resultMap="MyTag">
+        select * from blog.t_tag
+    </select>
+    <!--List<Tag> listTagByConditionForeach(@Param("idList") List<Long> idList);-->
+    <select id="listTagByConditionForeach" resultMap="MyTag">
+        select * from blog.t_tag
+        where id in
+        <foreach collection="idList" item="tag_id" separator="," open="(" close=")">
+            #{tag_id}
+        </foreach>
+    </select>
+    <!--Boolean updateTag(Tag tag);-->
+    <update id="updateTag" parameterType="tag">
+        update blog.t_tag
+        set name=#{name}
+        where id=#{id}
+    </update>
+    <!--Boolean deleteTagById(@Param("id")Long id);-->
+    <delete id="deleteTagById" parameterType="long">
+        delete from blog.t_tag
+        where id=#{id}
+    </delete>
+    <!--Tag getTagByName(@Param("name") String name);-->
+    <select id="getTagByName" resultMap="MyTag">
+        select * from blog.t_tag
+        where name=#{name}
+    </select>
+</mapper>

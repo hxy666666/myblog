@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tangyu.myblog.mapper.BlogMapper">
+    <!--自定义Blog类的封装规则-->
+    <resultMap id="MyBlog" type="com.tangyu.myblog.pojo.Blog">
+        <!--指定主键列的封装规则
+		id定义主键会底层有优化；
+		column：指定哪一列
+		property：指定对应的javaBean属性
+		  -->
+        <id property="id" column="id" />
+        <!-- 其他不指定的列会自动封装-->
+        <result property="tagIds" column="tag_ids"/>
+        <!-- association定义关联对象的封装规则
+	 		select:表明当前属性是调用select指定的方法查出的结果
+	 		column:指定将哪一列的值传给这个方法
+	 		流程：使用select指定的方法（传入column指定的这列参数的值）查出对象，并封装给property指定的属性
+	 	 -->
+        <association property="type" select="com.tangyu.myblog.mapper.TypeMapper.getTypeById"
+                     column="type_id"></association>
+        <association property="user" select="com.tangyu.myblog.mapper.UserMapper.getUserById"
+                     column="user_id"></association>
+        <collection property="comments" select="com.tangyu.myblog.mapper.CommentMapper.listCommentByBlogId"
+                    column="id"></collection>
+        <collection property="tags" select="com.tangyu.myblog.mapper.TagMapper.listTagByTagIds"
+                    column="tag_ids"></collection>
+    </resultMap>
+    <!--Long countBlog();-->
+    <select id="countBlog" resultType="long">
+        select count(*) from blog.t_blog
+    </select>
+    <!--List<Blog> listBlogByYear(@Param("year") String year);-->
+    <select id="listBlogByYear" resultMap="MyBlog">
+        select * from blog.t_blog
+        where date_format(t_blog.update_time,'%Y')=#{year}
+    </select>
+    <!--List<String> listBlogGroupYear();-->
+    <select id="listBlogGroupYear" resultType="string">
+        select date_format(t_blog.update_time,'%Y') as year from blog.t_blog group by year order by year desc
+    </select>
+    <!--List<Blog> listBlogBySearchLike(@Param("query") String query);-->
+    <select id="listBlogBySearchLike" resultMap="MyBlog">
+        select * from blog.t_blog
+        where title like CONCAT('%',#{query},'%') or content like CONCAT('%',#{query},'%')
+    </select>
+    <!--List<Blog> listBlogByTagIdLike(@Param("tagId") Long tagId);-->
+    <select id="listBlogByTagIdLike" resultMap="MyBlog">
+        select * from blog.t_blog
+        where tag_ids like CONCAT('%',#{tagId},'%')
+    </select>
+    <!--List<Blog> listBlogByTypeId(@Param("typeId") Long typeId);-->
+    <select id="listBlogByTypeId" resultMap="MyBlog">
+        select * from blog.t_blog
+        where type_id=#{typeId}
+    </select>
+    <!--Blog getBlogById(@Param("id") Long id);-->
+    <select id="getBlogById" resultMap="MyBlog">
+        select * from blog.t_blog
+        where id=#{id}
+    </select>
+    <!--List<Blog> listBlog(Blog blog);-->
+    <select id="listBlog" resultMap="MyBlog">
+        select * from blog.t_blog
+        <where>
+            <if test="title!=null &amp;&amp; title!=&quot;&quot;">
+                title like "%"#{title}"%"
+            </if>
+            <if test="type!=null">
+                and type_id=#{type.id}
+            </if>
+            <if test="recommend">
+                and recommend=#{recommend}
+            </if>
+        </where>
+    </select> 
+    <!--Boolean saveBlog(Blog blog);-->
+    <insert id="saveBlog" parameterType="blog">
+        insert into blog.t_blog(id, appreciation, commentabled, content, create_time, first_picture, flag,
+                                published, recommend, share_statement, title, update_time, views, type_id,
+                                user_id,tag_ids,description)
+        values(null,#{appreciation},#{commentabled},#{content},#{createTime},#{firstPicture},#{flag},
+               #{published},#{recommend},#{shareStatement},#{title},#{updateTime},#{views},#{type.id},
+               #{user.id},#{tagIds},#{description})
+    </insert>
+    <!--Boolean updateBlog(Blog blog);-->
+    <update id="updateBlog" parameterType="blog">
+        update blog.t_blog
+        set appreciation=#{appreciation}, commentabled=#{commentabled}, content=#{content},
+            create_time=#{createTime}, first_picture=#{firstPicture},flag=#{flag},
+            published=#{published},recommend=#{recommend},share_statement=#{shareStatement}, title=#{title},
+            update_time=#{updateTime}, views=#{views},  type_id=#{type.id},
+            user_id=#{user.id},tag_ids=#{tagIds},description=#{description}
+        where id=#{id}
+    </update>
+    <!--Boolean updateBlogViews(@Param("id") Long id);-->
+    <update id="updateBlogViews" parameterType="long">
+        update blog.t_blog
+        set views=views+1
+        where id=#{id}
+    </update>
+    <!--Boolean deleteBlog(@Param("id") Long id);-->
+    <delete id="deleteBlog" parameterType="long">
+        delete from blog.t_blog
+        where id=#{id}
+    </delete>
+</mapper>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>博客标签</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link rel="stylesheet" href="../../static/css/me.css">
+</head>
+<body>
+
+    <!--导航-->
+    <nav th:replace="admin/_fragments :: menu(3)">
+
+    </nav>
+
+    <div class="ui attached pointing menu m-shadow-small">
+        <div class="ui container">
+            <div class="right menu">
+                <a th:href="@{/admin/tags/input}" class="teal active item"><i class="edit icon"></i>新增</a>
+                <a th:href="@{/admin/tags}" class="item"><i class="list icon"></i>列表</a>
+            </div>
+        </div>
+    </div>
+
+    <!--中间内容-->
+    <div class="m-container-small m-padded-tb-big">
+        <div class="ui container">
+            <form th:action="${tag}==null ? @{/admin/tags} : @{/admin/tags/update}" method="post" class="ui form">
+                <div class="required field">
+                    <div class="ui left labeled input">
+                        <label class="ui teal basic label">名称</label>
+                        <input type="hidden" name="id" th:value="${tag}==null ? null : ${tag.getId()}">
+                        <input type="text" name="name" placeholder="标签名称" th:value="${tag}==null ? null : ${tag.getName()}">
+                    </div>
+                </div>
+
+                <div class="ui error message"></div>
+                <div class="ui negative message" th:unless="${#strings.isEmpty(message)}" th:text="${message}">提示：标签已存在！</div>
+
+                <div class="ui right aligned container">
+                    <button type="button" class="ui button" onclick="window.history.go(-1)">返回</button>
+                    <button class="ui teal submit button">提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <!--底部-->
+    <footer th:replace="admin/_fragments :: footer">
+
+    </footer>
+
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+<script>
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+    $('.ui.dropdown').dropdown({
+        on: 'hover'
+    });
+    $('.ui.form').form({
+        fields: {
+            name: {
+                identifier: 'name',
+                rules: [{
+                    type: 'empty',
+                    prompt: '请输入分类名称！'
+                }]
+            }
+        }
+    });
+    $('#newblog-container').load(/*[[@{/footer/newblogs}]]*/"/footer/newblog");
+</script>
+</body>
+</html>

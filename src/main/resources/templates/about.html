@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>关于我</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/me.css">
+</head>
+<body>
+
+    <!--导航-->
+    <nav th:replace="_fragments :: menu(5)">
+
+    </nav>
+
+    <!--中间内容-->
+    <div class="m-container m-padded-tb-big">
+        <div class="ui container">
+            <div class="ui stackable grid">
+                <div class="eleven wide column">
+                    <img src="https://picsum.photos/seed/picsum/800/600" alt="" class="ui rounded image">
+                </div>
+                <div class="five wide column">
+                    <div class="ui top attached segment">
+                        <div class="ui header">关于我</div>
+                    </div>
+                    <div class="ui attached segment">
+                        <p class="m-text">本人工作认真负责，态度严谨认真，热爱编程，喜欢技术，有责任感，重配合、时间观念。有强烈的进取意识，能够反思自己并虚心学习，并不断学习新的编程技术完善自己。</p>
+                        <p class="m-text">未来的学习要不断努力，共勉！</p>
+                    </div>
+                    <div class="ui attached segment">
+                        <div class="ui orange basic label">编程</div>
+                        <div class="ui orange basic label">写作</div>
+                        <div class="ui orange basic label">思考</div>
+                        <div class="ui orange basic label">运动</div>
+                    </div>
+                    <div class="ui attached segment">
+                        <div class="ui teal basic left pointing label m-margin-tb-tiny">Java</div>
+                        <div class="ui teal basic left pointing label m-margin-tb-tiny">Java</div>
+                        <div class="ui teal basic left pointing label m-margin-tb-tiny">Java</div>
+                        <div class="ui teal basic left pointing label m-margin-tb-tiny">Java</div>
+                        <div class="ui teal basic left pointing label m-margin-tb-tiny">Java</div>
+                        <div class="ui teal basic left pointing label m-margin-tb-tiny">Java</div>
+                        <div class="ui teal basic left pointing label m-margin-tb-tiny">Java</div>
+                        <div class="ui teal basic left pointing label m-margin-tb-tiny">...</div>
+                    </div>
+                    <div class="ui bottom attached segment">
+                        <a href="#" class="ui circular icon button"><i class="github icon"></i></a>
+                        <a href="#" class="ui wechat circular icon button"><i class="weixin icon"></i></a>
+                        <a href="#" class="ui qq circular icon button" data-content="516306494" data-position="bottom center"><i class="qq icon"></i></a>
+                    </div>
+
+                    <div class="ui wechat-qr flowing popup transition hidden">
+                        <img src="../static/images/tangyu.png" alt="" class="ui rounded image" style="width: 120px">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <!--底部-->
+    <footer th:replace="_fragments :: footer">
+
+    </footer>
+
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+<script>
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+    $('.wechat').popup({
+        popup: $('.wechat-qr'),
+        position: 'bottom center'
+    });
+    $('.qq').popup();
+    $('#newblog-container').load(/*[[@{/footer/newblogs}]]*/"/footer/newblog");
+</script>
+</body>
+</html>

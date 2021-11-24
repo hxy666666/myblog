@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tangyu.myblog.mapper.TypeMapper">
+    <!--嵌套结果集的方式，使用collection标签定义关联的集合类型的属性封装规则  -->
+    <resultMap id="MyType" type="com.tangyu.myblog.pojo.Type">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <collection property="blogs"
+                    select="com.tangyu.myblog.mapper.BlogMapper.listBlogByTypeId"
+                    column="id"></collection>
+    </resultMap>
+    
+    <!--Boolean saveType(Type type);-->
+    <insert id="saveType" parameterType="type">
+        insert into blog.t_type (id,name)
+        values (null,#{name})
+    </insert>
+    <!--Type getTypeById(@Param("id")Long id);-->
+    <select id="getTypeById" resultMap="MyType">
+        select * from blog.t_type
+        where id=#{id}
+    </select>
+    <!--List<Type> listType();-->
+    <select id="listType" resultMap="MyType">
+        select * from blog.t_type
+    </select>
+    <!--Boolean updateType(Type type);-->
+    <update id="updateType" parameterType="type">
+        update blog.t_type
+        set name=#{name}
+        where id=#{id}
+    </update>
+    <!--Boolean deleteTypeById(@Param("id")Long id);-->
+    <delete id="deleteTypeById" parameterType="long">
+        delete from blog.t_type
+        where id=#{id}
+    </delete>
+    <!--Type getTypeByName(@Param("name") String name);-->
+    <select id="getTypeByName" resultMap="MyType">
+        select * from blog.t_type
+        where name=#{name}
+    </select>
+</mapper>
